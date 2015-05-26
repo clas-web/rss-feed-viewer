@@ -1,0 +1,9 @@
+
+.wscontrol.rss-feed-viewer-control .rss-list .item {
+	margin-bottom:0.5em;
+	line-height:1.2em;
+}
+
+.wscontrol.rss-feed-viewer-control .rss-list .item .summary {
+	font-size:0.8em;
+}
