@@ -24,10 +24,10 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 	private static $MAX_ITEMS = 20;
 	
 	private static $SORT_TYPES = array(
-		'in-order'		=> 'date: chronological',
-		'reverse-order'	=> 'date: reverse chronological',
-		'a-z'			=> 'title: a-z',
-		'z-a'			=> 'title: z-a',
+		'in-order'		=> 'Recent First',
+		'reverse-order'	=> 'Recent Last',
+		'a-z'			=> 'A-Z',
+		'z-a'			=> 'Z-A',
 	);
 	
 	
