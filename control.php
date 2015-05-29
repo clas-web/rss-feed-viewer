@@ -102,6 +102,12 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 			<?php endforeach; ?>
 		</select>
 		</p>
+
+		<p>
+		<label for="<?php echo $this->get_field_id( 'allowed_tags' ); ?>"><?php _e( 'Allowed HTML Tags:' ); ?></label> 
+		<input id="<?php echo $this->get_field_id( 'allowed_tags' ); ?>" name="<?php echo $this->get_field_name( 'allowed_tags' ); ?>" type="text" value="<?php echo esc_attr( $allowed_tags ); ?>" class="widefat">
+		</p>
+		
 		
 		<?php
 	}
@@ -114,10 +120,11 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 	public function get_default_options()
 	{
 		return array(
-			'title'	=> '',
-			'url'	=> '',
-			'items'	=> 5,
-			'sort'	=> 'in-order'
+			'title'			=> '',
+			'url'			=> '',
+			'items'			=> 5,
+			'sort'			=> 'in-order',
+			'allowed_tags'	=> 'p,div,br,ul,ol,li,span',
 		);
 	}
 	
@@ -130,6 +137,12 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 	 */
 	public function process_options( $options )
 	{
+		// parse allowed tags.
+		if( is_string($options['allowed_tags']) )
+		{
+			$options['allowed_tags'] = explode( ',', $options['allowed_tags'] );
+			$options['allowed_tags'] = '<' . implode( '><', $options['allowed_tags'] ) . '>';
+		}
 		
 		return $options;
 	}
@@ -145,8 +158,8 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 	public function update( $new_options, $old_options )
 	{
 		$testurl = ( isset( $new_options['url'] ) && ( !isset( $old_options['url'] ) || ( $new_options['url'] != $old_options['url'] ) ) );
-		$options = wp_widget_rss_process( $new_options, $testurl );
-		return array_merge( $new_options, $options );
+		$rss_options = wp_widget_rss_process( $new_options, $testurl );
+		return array_merge( $new_options, $rss_options );
 	}
 	
 	
@@ -248,6 +261,7 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 					$title = __( 'Untitled' );
 
 				$summary = @html_entity_decode( $item->get_description(), ENT_QUOTES, get_option('blog_charset') );
+				$summary = strip_tags( $summary, $options['allowed_tags'] );
 				$summary = '<div class="summary">'.$summary.'</div>';
 
 				if ( $link == '' )
