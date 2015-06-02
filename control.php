@@ -1,4 +1,7 @@
 <?php
+
+require_once( dirname(__FILE__).'/widget-shortcode-control.php' );
+
 /**
  * RssFeedView_WidgetShortcodeControl
  * 
@@ -6,16 +9,11 @@
  * Derived from the official WP RSS widget.
  * 
  * Shortcode Example:
- * [rss-feed-viewer title="My RSS Feed Viewer" url="http://www.example.com/feed" items="5" sort="a-z"]
+ * [rss_feed_viewer title="My RSS Feed Viewer" url="http://www.example.com/feed" items="5" sort="a-z"]
  * 
  * @package    clas-buttons
  * @author     Crystal Barton <cbarto11@uncc.edu>
  */
-
-
-require_once( dirname(__FILE__).'/widget-shortcode-control.php' );
-
-
 if( !class_exists('RssFeedView_WidgetShortcodeControl') ):
 class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 {
@@ -188,7 +186,7 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 		/** This filter is documented in wp-includes/default-widgets.php */
 		$title = apply_filters( 'widget_title', $title, $options, $this->id_base );
 		
-		$url = esc_url(strip_tags($url));
+		$url = esc_url( strip_tags($url) );
 
 		echo $args['before_widget'];
 		echo '<div id="rss-feed-viewer-control-'.self::$index.'" class="wscontrol rss-feed-viewer-control">';
