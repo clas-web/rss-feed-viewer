@@ -1,26 +1,37 @@
 <?php
 
-require_once( dirname(__FILE__).'/widget-shortcode-control.php' );
+require_once( __DIR__.'/widget-shortcode-control.php' );
+
 
 /**
- * RssFeedView_WidgetShortcodeControl
- * 
- * The RssFeedView_WidgetShortcodeControl class for the "RSS Feed Viewer" plugin.
+ * Controls the setup and display of the RSS Feed Viewer widget and shortcode.
  * Derived from the official WP RSS widget.
  * 
  * Shortcode Example:
  * [rss_feed_viewer title="My RSS Feed Viewer" url="http://www.example.com/feed" items="5" sort="a-z"]
  * 
- * @package    clas-buttons
- * @author     Crystal Barton <cbarto11@uncc.edu>
+ * @package    rss-feed-viewer
+ * @author     Crystal Barton <atrus1701@gmail.com>
  */
 if( !class_exists('RssFeedView_WidgetShortcodeControl') ):
 class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 {
-	
+	/**
+	 * The minimum number of RSS items.
+	 * @var  int
+	 */	
 	private static $MIN_ITEMS = 1;
+
+	/**
+	 * The maximum number of RSS items.
+	 * @var  int
+	 */
 	private static $MAX_ITEMS = 20;
 	
+	/**
+	 * Types of sorts.
+	 * @var  Array
+	 */
 	private static $SORT_TYPES = array(
 		'in-order'		=> 'Recent First',
 		'reverse-order'	=> 'Recent Last',
@@ -31,7 +42,6 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 	
 	/**
 	 * Constructor.
-	 * Setup the properties and actions.
 	 */
 	public function __construct()
 	{
@@ -60,13 +70,12 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 	/**
 	 * Output the widget form in the admin.
 	 * Use this function instead of form.
-	 * @param   array   $options  The current settings for the widget.
+	 * @param  array  $options  The current settings for the widget.
 	 */
 	public function print_widget_form( $options )
 	{
 		$options = $this->merge_options( $options );
 		extract( $options );
-		
 		?>
 		
 		<p>
@@ -106,7 +115,6 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 		<input id="<?php echo $this->get_field_id( 'allowed_tags' ); ?>" name="<?php echo $this->get_field_name( 'allowed_tags' ); ?>" type="text" value="<?php echo esc_attr( $allowed_tags ); ?>" class="widefat">
 		</p>
 		
-		
 		<?php
 	}
 	
@@ -130,8 +138,8 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 	/**
 	 * Process options from the database or shortcode.
 	 * Designed to convert options from strings or sanitize output.
-	 * @param   array   $options  The current settings for the widget or shortcode.
-	 * @return  array   The processed settings.
+	 * @param  array  $options  The current settings for the widget or shortcode.
+	 * @return  array  The processed settings.
 	 */
 	public function process_options( $options )
 	{
@@ -149,8 +157,8 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 	/**
 	 * Update a particular instance.
 	 * Override function from WP_Widget parent class.
-	 * @param   array       $new_options  New options set in the widget form by the user.
-	 * @param   array       $old_options  Old options from the database.
+	 * @param  array  $new_options  New options set in the widget form by the user.
+	 * @param  array  $old_options  Old options from the database.
 	 * @return  array|bool  The settings to save, or false to cancel saving.
 	 */
 	public function update( $new_options, $old_options )
@@ -163,8 +171,8 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 	
 	/**
 	 * Echo the widget or shortcode contents.
-	 * @param   array  $options  The current settings for the control.
-	 * @param   array  $args     The display arguments.
+	 * @param  array  $options  The current settings for the control.
+	 * @param  array  $args  The display arguments.
 	 */
 	public function print_control( $options, $args )
 	{
@@ -217,8 +225,8 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 	/**
 	 * Echo the RSS items in the order specified by the user.
 	 * Modified version of "function wp_widget_rss_output" in WP core.
-	 * @param   SimplePie  $rss      The SimplePie RSS object.
-	 * @param   array      $options  The current settings of the control.
+	 * @param  SimplePie  $rss  The SimplePie RSS object.
+	 * @param  array  $options  The current settings of the control.
 	 */
 	private function wp_widget_rss_output( $rss, $options )
 	{
@@ -234,7 +242,7 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 		}
 		else
 		{
-			// sort items
+			// Sort items
 			$rss_items = $rss->get_items( 0, $items );
 			switch( $options['sort'] )
 			{
@@ -246,7 +254,7 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 					break;
 			}
 			
-			// print items
+			// Print items
 			foreach( $rss_items as $item )
 			{
 				$link = $item->get_link();
@@ -280,9 +288,9 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 	
 	/**
 	 * Sort in chronological order.
-	 * @param   SimplePie_Item  $a  The first item to compare.
-	 * @param   SimplePie_Item  $b  The second item to compare.
-	 * @return  int             1 if b is greater, -1 if a is greater, 0 if matched.
+	 * @param  SimplePie_Item  $a  The first item to compare.
+	 * @param  SimplePie_Item  $b  The second item to compare.
+	 * @return  int  1 if b is greater, -1 if a is greater, 0 if matched.
 	 */
 	private function sort_rss_items_in_order( $a, $b )
 	{
@@ -299,9 +307,9 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 
 	/**
 	 * Sort in reverse chronological order.
-	 * @param   SimplePie_Item  $a  The first item to compare.
-	 * @param   SimplePie_Item  $b  The second item to compare.
-	 * @return  int             1 if b is greater, -1 if a is greater, 0 if matched.
+	 * @param  SimplePie_Item  $a  The first item to compare.
+	 * @param  SimplePie_Item  $b  The second item to compare.
+	 * @return  int  1 if b is greater, -1 if a is greater, 0 if matched.
 	 */
 	private function sort_rss_items_reverse_order( $a, $b )
 	{
@@ -318,9 +326,9 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 
 	/**
 	 * Sort in alphabetical order.
-	 * @param   SimplePie_Item  $a  The first item to compare.
-	 * @param   SimplePie_Item  $b  The second item to compare.
-	 * @return  int             1 if b is greater, -1 if a is greater, 0 if matched.
+	 * @param  SimplePie_Item  $a  The first item to compare.
+	 * @param  SimplePie_Item  $b  The second item to compare.
+	 * @return  int  1 if b is greater, -1 if a is greater, 0 if matched.
 	 */
 	private function sort_rss_items_a_z( $a, $b )
 	{
@@ -347,9 +355,9 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 	
 	/**
 	 * Sort in reverse alphabetical order.
-	 * @param   SimplePie_Item  $a  The first item to compare.
-	 * @param   SimplePie_Item  $b  The second item to compare.
-	 * @return  int             1 if b is greater, -1 if a is greater, 0 if matched.
+	 * @param  SimplePie_Item  $a  The first item to compare.
+	 * @param  SimplePie_Item  $b  The second item to compare.
+	 * @return  int  1 if b is greater, -1 if a is greater, 0 if matched.
 	 */
 	private function sort_rss_items_z_a( $a, $b )
 	{
@@ -372,7 +380,6 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 		
 		return 1;
 	}
-	
 }
 endif;
 
