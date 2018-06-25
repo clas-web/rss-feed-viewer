@@ -1,8 +1,5 @@
 <?php
 
-require_once( __DIR__.'/widget-shortcode-control.php' );
-
-
 /**
  * Controls the setup and display of the RSS Feed Viewer widget and shortcode.
  * Derived from the official WP RSS widget.
@@ -75,6 +72,7 @@ class RssFeedView_WidgetShortcodeControl extends WidgetShortcodeControl
 	public function print_widget_form( $options )
 	{
 		$options = $this->merge_options( $options );
+		print_r($options);
 		extract( $options );
 		?>
 		
